@@ -376,17 +376,17 @@ def get_B_sequence(B_file,seq_length,bin_size,ztype='B'):
         B_data = pd.read_csv(B_file, header = None,sep='\t') # load data TODO
         B_stat = np.array(B_data.loc[:,1:3])
         b_length = B_stat[:,1][-1]
-        length_diff_thresh=10*bin_size
+        length_diff_thresh=5e+06
         endcheck=False
         if seq_length>b_length+length_diff_thresh:
-            print(f'\tLength of mhs file = {seq_length} is more than length than {ztype}_map file ={b_length} + threshold = {length_diff_thresh} ; {ztype}_file = {B_file}. Aborting.')
+            print(f'\tLength of mhs file = {seq_length} is more than length than {ztype}_map file ={b_length} + threshold = {length_diff_thresh} ; {ztype}_file = {B_file}. Aborting.',flush=True)
             sys.exit()
         elif seq_length>b_length and seq_length<b_length+length_diff_thresh:
-            print(f'\tLength of mhs file = {seq_length}; length of {ztype}_map file ={b_length}; padding {seq_length-b_length} base pairs with {ztype}=1')
+            print(f'\tLength of mhs file = {seq_length}; length of {ztype}_map file ={b_length}; padding {seq_length-b_length} base pairs with {ztype}=1',flush=True)
             padcheck=seq_length-b_length
             endcheck=True
         else:
-            print(f'\tLength of mhs file = {seq_length}; length of {ztype}_map file ={b_length}; trimming {b_length-seq_length} base pairs')
+            print(f'\tLength of mhs file = {seq_length}; length of {ztype}_map file ={b_length}; trimming {b_length-seq_length} base pairs',flush=True)
 
         z = np.copy(B_stat[:,2])
         z2 = np.copy(B_stat[:,0:2])

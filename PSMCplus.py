@@ -80,7 +80,7 @@ gives lambda_array=[1,1,1,1,2,2,2,2,3,3,3,3], where the values at 2 are fixed.
 """
 
 
-print(f'\nRunning PSMCplus; last updated 230925ymd; v1.1')
+print(f'\nRunning PSMCplus; last updated 230925ymd; v1.1',flush=True)
 arguments = sys.argv[1:]
 command_line = 'python ' + ' '.join(['"{}"'.format(arg) if ' ' in arg else arg for arg in [sys.argv[0]] + arguments])
 print(f'Command line: {command_line}')
@@ -89,10 +89,10 @@ if args.decode_flag is True:
     decode_flag = True
     inference_flag = False
     downsample = args.decode_downsample
-    print(f'\tDecoding')
+    print(f'\tDecoding',flush=True)
     if downsample>1: print(f'\tdownsampling x{downsample}')
     if len(args.input_file_path)>1:
-        print(f'decode can only take one file. Aborting. ')
+        print(f'decode can only take one file. Aborting. ',flush=True)
         sys.exit()
 else:
     inference_flag = True
@@ -118,16 +118,16 @@ recombnoexp = args.recombnoexp
 mhs_files_M_file = {}
 if num_files_M>0:
     if num_files!=num_files_M:
-        print(f'\tProblem. Mutation rate files provided, but number of files={num_files_M} does not match number of mhs files={num_files}. Aborting')
+        print(f'\tProblem. Mutation rate files provided, but number of files={num_files_M} does not match number of mhs files={num_files}. Aborting',flush=True)
         sys.exit()
     files_paths_M = [file for file in args.input_file_path_M]
-    print(f'\nLoaded mhs and mutation rate file(s):')
+    print(f'\nLoaded mhs and mutation rate file(s):',flush=True)
     for i in range(num_files):
         print(f'\tmhs={files_paths[i]};\n\t\tmutation_map={files_paths_M[i]}')
         mhs_files_M_file[files_paths[i]] = files_paths_M[i]
 else:
     num_files_M = 0
-    print(f'\nLoaded mhs file(s):')
+    print(f'\nLoaded mhs file(s):',flush=True)
     for i in range(num_files):  
         print(f'\t{files_paths[i]}')
         mhs_files_M_file[files_paths[i]] = 'null'
@@ -137,12 +137,12 @@ else:
 mhs_files_R_file = {}
 if num_files_R>0:
     if num_files!=num_files_R:
-        print(f'\tProblem. Recomb rate files provided, but number of files={num_files_R} does not match number of mhs files={num_files}. Aborting')
+        print(f'\tProblem. Recomb rate files provided, but number of files={num_files_R} does not match number of mhs files={num_files}. Aborting',flush=True)
         sys.exit()
     files_paths_r = [file for file in args.input_file_path_R]
-    print(f'\nLoaded mhs and recombination rate file(s):')
+    print(f'\nLoaded mhs and recombination rate file(s):',flush=True)
     for i in range(num_files):
-        print(f'\tmhs={files_paths[i]};\n\t\trecombination_map={files_paths_r[i]}')
+        print(f'\tmhs={files_paths[i]};\n\t\trecombination_map={files_paths_r[i]}',flush=True)
         mhs_files_R_file[files_paths[i]] = files_paths_r[i]
 else:
     num_files_R = 0
@@ -157,7 +157,7 @@ if args.file_outpath is None:
     try:
         os.mkdir(output_path)
     except:
-        print('\tDirectory already exists.')
+        print('\tDirectory already exists.',flush=True)
 else:
     output_path = args.file_outpath
     print(f'\nSaving output to {output_path}',flush=True)
@@ -167,17 +167,17 @@ output_R_path = args.output_R_path
 D = args.number_time_windows
 spread_1 = args.D_spread_1
 spread_2 = args.D_spread_2
-print(f'\nParameters:')
-print(f'\tnumber of time windows={D}')
-print(f'\tspread_1={spread_1}; spread_2={spread_2}')
+print(f'\nParameters:',flush=True)
+print(f'\tnumber of time windows={D}',flush=True)
+print(f'\tspread_1={spread_1}; spread_2={spread_2}',flush=True)
 lambda_lwr_bnd = args.lambda_lwr_bnd
 lambda_upr_bnd = args.lambda_upr_bnd
-print(f'\tlambda_lwr_bnds is {lambda_lwr_bnd}')
-print(f'\tlambda_upr_bnds is {lambda_upr_bnd}')
+print(f'\tlambda_lwr_bnds is {lambda_lwr_bnd}',flush=True)
+print(f'\tlambda_upr_bnds is {lambda_upr_bnd}',flush=True)
 
 # set bin_size
 bin_size = args.bin_size
-print(f'\tbin size is {bin_size}')
+print(f'\tbin size is {bin_size}',flush=True)
 
 xtol = args.xtol
 # print(f'\txtol is {xtol}')
@@ -194,7 +194,7 @@ if midpoint_transitions=="False":
     midpoint_transitions = False
 else:
     midpoint_transitions = True
-print(f'\tmidpoint_transitions is {midpoint_transitions}')
+print(f'\tmidpoint_transitions is {midpoint_transitions}',flush=True)
 
 
 midpoint_emissions = args.midpoint_emissions
@@ -233,7 +233,7 @@ print('\tinference type: panmictic',flush=True)
 if args.BW_threshold is not None:
     BW_thresh = float(args.BW_threshold)
     # print(f'\tBW_thresh is {BW_thresh}')
-    print(f'\tthreshold for change in log-likelihood in EM algorithm: {BW_thresh}')
+    print(f'\tthreshold for change in log-likelihood in EM algorithm: {BW_thresh}',flush=True)
 
 else:
     BW_thresh = None
@@ -241,19 +241,19 @@ else:
 
 # set BW_its
 BW_its = int(args.BW_its)
-print(f'\tnumber of iterations in EM algorithm: {BW_its}')
+print(f'\tnumber of iterations in EM algorithm: {BW_its}',flush=True)
 
 save_iteration_files = args.save_iteration_files
 
 # if both BW_its and BW_thresh are defined
 if BW_thresh and BW_its:
-    print(f'\t\twill iterate until either criteria is met')
+    print(f'\t\twill iterate until either criteria is met',flush=True)
 
 
-print(f'\nSequence information:')
+print(f'\nSequence information:',flush=True)
 sequences_info = Parallel(n_jobs=cores, backend='loky')(delayed(bin_sequence)(in_path,bin_size,mhs_files_M_file,mhs_files_R_file) for in_path in files_paths) # returns for mhs file:  het_data, mask_data, j_max, seq_length, num_hets, num_masks, M_sequence_binned, M_vals, R_sequence_binned, R_vals
 # zsequences_info = bin_sequence(files_paths[0],bin_size,mhs_files_M_file) # returns for mhs file:  het_data, mask_data, j_max, seq_length, num_hets, num_masks, M_sequence_binned, M_vals
-print(f'\t\tFinished getting sequence information.')
+print(f'\t\tFinished getting sequence information.',flush=True)
 total_seq_length = sum([sequences_info[i][3] for i in range(0,num_files)])
 total_num_hets = sum([sequences_info[i][4] for i in range(0,num_files)])
 total_num_masks = sum([sequences_info[i][5] for i in range(0,num_files)])
@@ -274,7 +274,7 @@ else:
     try:
         theta = float(args.scaled_mutation_rate)
     except:
-        print('\t\ttheta input not valid. Aborting')
+        print('\t\ttheta input not valid. Aborting',flush=True)
         sys.exit()
 
 if args.mu_over_rho_ratio==None:
@@ -287,8 +287,8 @@ else:
         rho = theta*0.8
 
 
-print(f'\tThe scaled mutation rate (theta=4*N*mu) is {theta}')
-print(f'\tThe scaled recombination rate (rho=4*N*r) is {rho}')
+print(f'\tThe scaled mutation rate (theta=4*N*mu) is {theta}',flush=True)
+print(f'\tThe scaled recombination rate (rho=4*N*r) is {rho}',flush=True)
 
 # adjust recomb rate for binning
 rho = rho*bin_size
@@ -308,9 +308,9 @@ lambda_A_segs = write_segments(args.lambda_A_segments,D)
 lambda_A_values = parse_lambda_fg(args.lambda_A_fg,lambda_A_segs)
 lambda_A = parse_lambda_input(lambda_A_values,D,lambda_A_segs)
 
-print('\nEM parameters:')
-print(f'\tfirst guess for lambda_A is [{",".join([str(i) for i in lambda_A])}]') # TODO Write this to file
-print(f'\ttime segment pattern for lambda_A is {lambda_A_segs}')
+print('\nEM parameters:',flush=True)
+print(f'\tfirst guess for lambda_A is [{",".join([str(i) for i in lambda_A])}]',flush=True) # TODO Write this to file
+print(f'\ttime segment pattern for lambda_A is {lambda_A_segs}',flush=True)
 
 T_S_fg = None
 T_E_fg = None
@@ -325,16 +325,16 @@ lambda_lwr_bnd_struct = None
 lambda_upr_bnd_struct = None
 
 if inference_flag==True:
-    print(f'\nStarting EM algorithm.')
+    print(f'\nStarting EM algorithm.',flush=True)
     BW = BaumWelch(sequences_info=sequences_info,D=D,E=E,E_masked=E_masked,lambda_A_values=lambda_A_values,lambda_B_values=lambda_B_values,gamma_fg=gamma_fg,lambda_A_segs = lambda_A_segs,lambda_B_segs = lambda_B_segs,rho=rho,theta=theta,estimate_rho=estimate_rho,final_T_factor=final_T_factor,T_array=T,bin_size=bin_size,T_S=T_S_input,T_E=T_E_input,j_max=j_max,spread_1=spread_1,spread_2=spread_2,lambda_lwr_bnd=lambda_lwr_bnd,lambda_upr_bnd=lambda_upr_bnd,gamma_lwr_bnd=gamma_lwr_bnd,gamma_upr_bnd=gamma_upr_bnd,output_path=output_path,cores=cores,xtol=xtol,ftol=ftol,midpoint_transitions=midpoint_transitions,midpoint_end=midpoint_emissions,optimisation_method=optimisation_method,save_iteration_files=save_iteration_files,lambda_lwr_bnd_struct = lambda_lwr_bnd_struct, lambda_upr_bnd_struct = lambda_upr_bnd_struct,recombnoexp=recombnoexp)
     BW.BaumWelch(BW_iterations=BW_its,BW_thresh=BW_thresh)
-    print(f'\nFinished EM algorithm.')
-    print(f'\nGetting log_likelihood.')
+    print(f'\nFinished EM algorithm.',flush=True)
+    print(f'\nGetting log_likelihood.',flush=True)
     get_loglikelihood(BW,output_path=output_path)
 elif decode_flag==True:
     BW = BaumWelch(sequences_info=sequences_info,D=D,E=E,E_masked=E_masked,lambda_A_values=lambda_A_values,lambda_B_values=lambda_B_values,gamma_fg=gamma_fg,lambda_A_segs = lambda_A_segs,lambda_B_segs = lambda_B_segs,rho=rho,theta=theta,estimate_rho=estimate_rho,final_T_factor=final_T_factor,T_array=T,bin_size=bin_size,T_S=T_S_input,T_E=T_E_input,j_max=j_max,spread_1=spread_1,spread_2=spread_2,lambda_lwr_bnd=lambda_lwr_bnd,lambda_upr_bnd=lambda_upr_bnd,gamma_lwr_bnd=gamma_lwr_bnd,gamma_upr_bnd=gamma_upr_bnd,output_path=output_path,cores=cores,xtol=xtol,ftol=ftol,midpoint_transitions=midpoint_transitions,midpoint_end=midpoint_emissions,optimisation_method=optimisation_method,save_iteration_files=save_iteration_files,lambda_lwr_bnd_struct = lambda_lwr_bnd_struct, lambda_upr_bnd_struct = lambda_upr_bnd_struct,recombnoexp=recombnoexp)
     get_posterior(BW,downsample,output_path,output_R_path)  
 else:
-    print('\tError!')
+    print('\tError!',flush=True)
 
 # deleteme
