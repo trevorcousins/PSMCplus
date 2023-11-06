@@ -602,7 +602,7 @@ def calculate_transition_evidence(sequence_fcn,file,D,init_dist,E_masked,Q_curre
     # return A_evidence_new, ll
     return A_evidence, ll
 
-# @njit # TODO put back in
+@njit # TODO put back in
 def forward_matmul_scaled_fcn(sequence,D,init_dist,E,Q,bin_size,theta,midpoints,B_sequence,B_values,R_sequence): # matmult, classic forward with matrix multiplication
     # L = len(sequence) # length of sequence
     # f_ = np.zeros(shape=(D,L)) # initialise forward variables

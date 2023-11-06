@@ -313,10 +313,10 @@ class BaumWelch:
             # zQ_current_array = write_Q_array_withR_old(tm_dummy.Q,R_vals,R_vals[np.argmin(np.abs(R_vals-1))],self.D)
             Q_current_array = write_Q_array_withR(tm_dummy.Q,R_vals,self.rho,self.D,self.spread_1,self.spread_2,self.lambda_A_current,self.midpoint_transitions) # TODO use this!!!
             
-            expectation_steps = Parallel(n_jobs=self.num_files, backend='loky')(delayed(calculate_transition_evidence)(self.sequence_fcn,file,self.D,self.init_dist,self.E_masked,Q_current_array,self.theta,self.rho,self.bin_size,self.j_max,self.midpoints,self.spread_1,self.spread_2,self.midpoint_transitions) for file in range(self.num_files))
+            expectation_steps = Parallel(n_jobs=self.cores, backend='loky')(delayed(calculate_transition_evidence)(self.sequence_fcn,file,self.D,self.init_dist,self.E_masked,Q_current_array,self.theta,self.rho,self.bin_size,self.j_max,self.midpoints,self.spread_1,self.spread_2,self.midpoint_transitions) for file in range(self.num_files))
             # expectation_steps = calculate_transition_evidence(self.sequence_fcn,0,self.D,self.init_dist,self.E_masked,self.Q_current,self.ram_limit,self.theta,self.bin_size,self.j_max,self.midpoints) 
 
-            # expectation_steps = Parallel(n_jobs=self.num_files, backend='loky')(delayed(self.calculate_transition_evidence_copy)(file) for file in range(self.num_files))
+            # expectation_steps = Parallel(n_jobs=self.cores, backend='loky')(delayed(self.calculate_transition_evidence_copy)(file) for file in range(self.num_files))
             end = time.time()
             time_taken = end - start
             print(f'\t\t\ttime taken to calculate expectation: {time_taken}')
