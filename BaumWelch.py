@@ -16,7 +16,7 @@ from scipy import linalg
 
 
 class BaumWelch:
-    def __init__(self,sequences_info,D,E,E_masked,lambda_A_values,lambda_B_values,gamma_fg,lambda_A_segs,lambda_B_segs,rho,theta,T_S,T_E,T_array,bin_size,j_max,cores,xtol=0.0001,ftol=0.0001,spread_1=0.1,spread_2=50,lambda_lwr_bnd=0.1,lambda_upr_bnd=10,gamma_lwr_bnd=0,gamma_upr_bnd=1,estimate_rho=True,output_path = None,verbosity=False,midpoint_transitions=False,optimisation_method="Powell",save_iteration_files=False,final_T_factor=None,midpoint_end=False,lambda_lwr_bnd_struct = 0.5, lambda_upr_bnd_struct = 2, recombnoexp = False):
+    def __init__(self,sequences_info,D,E,E_masked,lambda_A_values,lambda_B_values,gamma_fg,lambda_A_segs,lambda_B_segs,rho,theta,T_S,T_E,T_array,bin_size,j_max,cores=1,xtol=0.0001,ftol=0.0001,spread_1=0.1,spread_2=50,lambda_lwr_bnd=0.1,lambda_upr_bnd=10,gamma_lwr_bnd=0,gamma_upr_bnd=1,estimate_rho=True,output_path = None,verbosity=False,midpoint_transitions=False,optimisation_method="Powell",save_iteration_files=False,final_T_factor=None,midpoint_end=False,lambda_lwr_bnd_struct = 0.5, lambda_upr_bnd_struct = 2, recombnoexp = False):
         
         self.sequences_info = sequences_info
         self.num_files = len(sequences_info)
@@ -209,7 +209,6 @@ class BaumWelch:
         tm_dummy = Transition_Matrix(D=self.D,spread_1=self.spread_1,spread_2=self.spread_2,midpoint_transitions=self.midpoint_transitions) # initialise transition matrix object
         if self.estimate_rho is False: # panmixia and no rho
             params_initial_guess = self.lambda_A_values
-            zmax = A_new.max()
             start = time.time()
             res = minimize(self.neg_objective_function_pan,params_initial_guess,args=(A_new,tm_dummy,self.rho),method=self.optimisation_method,bounds=self.lambda_bnds,options={'xtol': self.xtol,'ftol': self.ftol}) #flag220818
             end = time.time()
