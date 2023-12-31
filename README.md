@@ -1,6 +1,6 @@
 # PSMCplus
 
-My implementation of Li and Durbin's pairwise sequentially Markovian coalescent. 
+My implementation of Li and Durbin's pairwise sequentially Markovian coalescent ([PSMC](https://pubmed.ncbi.nlm.nih.gov/21753753/)) . 
 
 ## Installation
 
@@ -25,7 +25,7 @@ PSMC+ takes multi-hetsep (mhs) files as introduced by Stephan Schiffels. To gene
 
 You can run PSMCplus with the following command line: 
 
-```python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>```
+`python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>`
 
 `D` is the number of discrete time interval windows, `b` is the genomic bin size, and `its` is the number of iterations (see the Advanced section for a more detailed explanation). `<infiles>` is a string (separated by a space if more than one) that points to the mhs files. The inferred parameters will be saved to `<outprefix>final_parameters.txt` and a log file will be saved to `<logfile>`. The output file contains `D` rows and 3 columns, which are left time boundary, the right time boundary, and the coalescence rate per discrete time window. To scale the times into generations, you must divide by `mu`. We get the effective population size by taking the inverse of the inverse coalescence rate and dividing this by `mu`. 
 
@@ -41,7 +41,7 @@ plt.ylabel('$N_e(t)$')
 plt.xlabel('Years')
 ```   
     
-See the tutorial notebook (TODO link) for a specific example, and the Advanced section for a more detailed explanation of the hyperparameters. 
+See the [Inference Tutorial notebook](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for a specific example, and the Advanced section for a more detailed explanation of the hyperparameters. 
 
 ### Decoding 
 
@@ -49,9 +49,9 @@ You can decode the HMM (get the inferred coalescence times across the genome) wi
 
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infile> -D <D> -o <outprefix> -decode -decode_downsample <decode_downsize> | tee <logfile.txt>`
 
-The argument `-decode` tells PSMC+ to decode the HMM, as opposed to inferring the $N_e$ parameters. The decoding file is large - you can reduce disc space by saving the posterior probabilities only at every X base pairs with the `-decode_downsample` argument, where `X = b*decode_downsize` (`b` is the genomic binsize, see above or Advanced). I recommend that when decoding you provide the command line with the inferred inverse coalescence rate parameters, as assuming an incorrect demography can induces bias (see Schweiger Sup Fig X). See `-lambda_A_fg` in the Advanced section for more information.  See the tutorial for an example.
+The argument `-decode` tells PSMC+ to decode the HMM, as opposed to inferring the $N_e$ parameters. The decoding file is large - you can reduce disc space by saving the posterior probabilities only at every X base pairs with the `-decode_downsample` argument, where `X = b*decode_downsize` (`b` is the genomic binsize, see above or Advanced). I recommend that when decoding you provide the command line with the inferred inverse coalescence rate parameters, as assuming an incorrect demography can induces bias (see Schweiger Sup Fig X). See `-lambda_A_fg` in the Advanced section for more information.  See the [Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for an example.
 
-For the output file, the first row is the position, and the remaining rows are the probability of coalescing in each time window, with the first row being the most recent and the last row the most ancient. The time windows are in coalescent units, and the boundaries are detailed in the comment at the top of the file. See the tutorial for parsing this file. 
+For the output file, the first row is the position, and the remaining rows are the probability of coalescing in each time window, with the first row being the most recent and the last row the most ancient. The time windows are in coalescent units, and the boundaries are detailed in the comment at the top of the file. See the [Inference Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for parsing this file. 
 
 # Advanced
 
@@ -83,7 +83,7 @@ Default behaviour is to set `rho=theta/mu_over_rho_ratio` (see above), then upda
 -rho_fixed
 Do not infer rho as part of the EM algorithm. 
 
-By default rho is updated as part of the EM algorithm. This has been shown not to be particualrly accurate (ref Dutheil), but historically has been standard practise. If you do not want to update rho, you can add the flag -rho_fixed which will force rho to remain at its starting value. Usage: 
+By default rho is updated as part of the EM algorithm. This has been shown not to be particularly accurate, but historically has been standard practise. If you do not want to update rho, you can add the flag -rho_fixed which will force rho to remain at its starting value. Usage: 
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> -rho_fixed | tee <logfile>`
 
 -b 
@@ -109,7 +109,7 @@ A comma separated list of floats that are taken are used as the starting guess f
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o inference/final_parameters.txt -lambda_A_fg 1,1,5,5,5,5,5,1,1,1 | tee <logfile>`
 
 Default behaviour is to assume `lambda_A_fg` is 1 everywhere. 
-See the tutorial for more information on this, especially for the decoding. 
+See the [Inference Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for more information on this, especially for the decoding. 
 
 -thresh 
 Stop iterating the EM algorithm after the change in log-likelihood is less than thresh. 
@@ -129,15 +129,14 @@ Default behaviour is to set `spread1=0.05` and `spread2=50`. Usage: if you want 
 
 ## Simulation
 
-If you want to simulate a panmictic demography, you probably want to use msprime or SLiM as these are extremely powerful and flexible. However, I also provide functionality to simulate directly from the PSMC HMM (this is necessarily simulating from the SMC' model, which is marginally a very good approximation to the full coalescent with recombination - see this paper TODO ref WIlton 2015). An example command line to simulate a constant population size is:
+If you want to simulate a panmictic demography, you probably want to use msprime or SLiM as these are extremely powerful and flexible. However, I also provide functionality to simulate directly from the PSMC HMM (this is necessarily simulating from the SMC' model, which is marginally a very good approximation to the full coalescent with recombination - see Wilton 2015). An example command line to simulate a constant population size is:
 `python /home/<user>/PSMCplus/simulate_HMM.py -D 10 -theta 0.001 -rho 0.0005 -o_mhs simulations/sim1_variants.mhs -o_coal simulations/sim1_coal.txt.gz -spread_1 0.1 -spread_2 50 -L 1000000`
 `D`, `theta`, `rho`, `b`, `spread_1` and `spread_2`, are as described above. `L` is an integer for the sequence length. 
 This will save an mhs file detailing the variant positions to simulations/sim1_variants.mhs, and a file detailing the coalescent data (pairwise coalescence times across the genome) to `simulations/sim1_coal.txt.gz`. The third column of this file is the index of the coalescent time between the genomic positions described in the first and second column. 
 
 To simulate with a changing population size, you must give an argument `-lambda_A`, which is a comma separated string where each value is the inverse coalescence rate in each time interval. For example if you want a simulation with 32 discrete time windows with a population of relative size 1 that doubles in size between time index 10 and 20, then you can do: 
 `python /home/trevor/PSMCplus/simulate_HMM.py -D 32 -lambda_A 1,1,1,1,1,1,1,1,1,1,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,1,1,1,1,1,1,1,1,1,1,1,1,1,1 -theta 0.001 -rho 0.0005 -o_mhs simulations/sim2_variants.mhs -o_coal simulations/sim2_coal.txt.gz -L 1000000`
-You can visualise the desired demography and parameters from the simulation in the Simulation Tutorial notebook
-<link>.
+You can visualise the desired demography and parameters from the simulation in the [Simulation Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Simulation_tutorial.ipynb).
 
 
 ## Varying mutation (or recombination) rates
