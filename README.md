@@ -4,26 +4,28 @@ My implementation of Li and Durbin's pairwise sequentially Markovian coalescent.
 
 ## Installation
 
-PSMCplus is written in python. You will need numpy, numba, pandas, joblib, and scipy. You can install these with e.g:
+PSMC+ is written in python. You will need numpy, numba, pandas, joblib, and scipy. You can install these with e.g:
 
+```
 conda create --name PSMCplus
 conda install numpy
 conda intall numba
 conda install pandas
 conda install joblib
 conda install scipy
+```
 
 ## Quick start
 
 ### Input files
 
-PSMCplus takes multi-hetsep (mhs) files as introduced by Stephan Schiffels. To generate these files, you can use his tutorial (https://github.com/stschiff/msmc-tools). Or, if you have a bam file you can use my Snakefile to process this into mhs files (TODO link). 
+PSMC+ takes multi-hetsep (mhs) files as introduced by Stephan Schiffels. To generate these files, you can use his tutorial (https://github.com/stschiff/msmc-tools). Or, if you have a bam file you can use my Snakefile to process this into mhs files (TODO link). 
 
 ### Inference of population size history
 
 You can run PSMCplus with the following command line: 
 
-python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>
+```python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>```
 
 D is the number of discrete time interval windows, b is the genomic bin size, and its is the number of iterations (see the Advanced section for a more detailed explanation). <infiles> is a string (separated by a space if more than one) that points to the mhs files. The inferred parameters will be saved to <outprefix>final_parameters.txt and a log file will be saved to <logfile>. The output file contains D rows and 3 columns, which are left time boundary, the right time boundary, and the coalescence rate per discrete time window. To scale the times into generations, you must divide by mu. We get the effective population size by taking the inverse of the inverse coalescence rate and dividing this by mu. 
 
