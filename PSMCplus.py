@@ -33,7 +33,7 @@ parser.add_argument('-b','--bin_size',help='Adjust recombination rate to bin thi
 parser.add_argument('-rho','--scaled_recombination_rate',help='The scaled recombination rate; if p is per gen per bp recombination rate, and 2N is the diploid effective size, rho =4Np',nargs='?',const=0.0004,type=float,default=0.0004)
 parser.add_argument('-theta','--scaled_mutation_rate',help='The scaled mutation rate; if mu is per gen per bp mutation rate, and 2N is the diploid effective size, theta =4Nmu',required=False,type=str,default=None)
 parser.add_argument('-rho_fixed','--rho_fixed',help='Boolean for optimising rho as a parameter',default=False,action='store_true')
-parser.add_argument('-mu_over_rho_ratio','--mu_over_rho_ratio',help='Starting ratio between theta and rho',nargs='?',const=False,type=float,default=None)
+parser.add_argument('-mu_over_rho_ratio','--mu_over_rho_ratio',help='Starting ratio between theta and rho',nargs='?',const=False,type=float,default=1.5)
 parser.add_argument('-lambda_lwr','--lambda_lwr_bnd',help='Lower bound for lambda when searching for psc parameters',nargs='?',const=False,type=float,default=0.1)
 parser.add_argument('-lambda_upr','--lambda_upr_bnd',help='Upper bound for lambda when searching for psc parameters',nargs='?',const=False,type=float,default=50)
 parser.add_argument('-number_downsamples_R','--number_downsamples_R',help='Number of points in R to take',nargs='?',const=False,type=int,default=200)
@@ -280,12 +280,8 @@ else:
 if args.mu_over_rho_ratio==None:
     rho = args.scaled_recombination_rate
 else:
-    try:
-        rho = theta / args.mu_over_rho_ratio
-    except:
-        # print(f'\t "rho = theta / args.mu_over_rho_ratio" failed. Setting rho=theta*0.8')
-        rho = theta*0.8
-
+    rho = theta / args.mu_over_rho_ratio
+    
 
 print(f'\tThe scaled mutation rate (theta=4*N*mu) is {theta}',flush=True)
 print(f'\tThe scaled recombination rate (rho=4*N*r) is {rho}',flush=True)
