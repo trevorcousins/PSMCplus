@@ -19,7 +19,7 @@ conda install scipy
 
 ### Input files
 
-PSMC+ takes multi-hetsep (mhs) files as introduced by Stephan Schiffels. To generate these files, you can use his tutorial (https://github.com/stschiff/msmc-tools). Or, if you have a bam file you can use my Snakefile to process this into mhs files (TODO link). 
+PSMC+ takes multi-hetsep (mhs) files as introduced by Stephan Schiffels. To generate these files, you can use [his tutorial](https://github.com/stschiff/msmc-tools/blob/master/msmc-tutorial/guide.md). Or, if you have a bam file you can use my Snakefile to process this into mhs files (TODO link). 
 
 ### Inference of population size history
 
@@ -142,4 +142,5 @@ You can visualise the desired demography and parameters from the simulation in t
 
 ## Varying mutation (or recombination) rates
 
+TODO elaborate. 
 PSMC+ enables a user to provided a map of varying mutation or recombination rates. These files are essentially bed files, in that the columns are ...XXX.... 
