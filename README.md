@@ -4,13 +4,12 @@ A new implementation of Li and Durbin's pairwise sequentially Markovian coalesce
 
 ## Installation
 
-PSMC+ is written in Python. You will need numpy, numba, pandas, joblib, scipy, psutil and matplotlib. You can install these with:
-
+PSMC+ is written in Python. You will need numpy, numba, pandas, joblib, scipy, psutil and matplotlib. You can install these in `conda` with:
+`Arun: what's the minimal version of Python that PSMC+ will work on? I'm not sure which version of python is installed when you run conda create`
 ```
 conda create --name PSMCplus
 conda install numpy numba pandas joblib scipy psutil matplotlib
 conda activate PSMCplus
-
 ```
 
 To check whether the installation worked, you can run with some test data:<br>
