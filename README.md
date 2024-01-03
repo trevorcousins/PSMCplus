@@ -13,6 +13,9 @@ conda activate PSMCplus
 
 ```
 
+To check whether the installation worked, you can run with some test data:<br>
+python /home/<user>/PSMCplus/PSMCplus.py -in /home/<user>/PSMCplus/simulations/constpopsize.mhs -D 10 -b 100 -its 1 -o /tmp/deleteme
+
 ## Quick start
 
 ### Input files
