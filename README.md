@@ -5,7 +5,7 @@ A new implementation of Li and Durbin's pairwise sequentially Markovian coalesce
 ## Installation
 
 PSMC+ is written in Python. You will need numpy, numba, pandas, joblib, scipy, psutil and matplotlib. You can install these in `conda` with:
-`Arun: what's the minimal version of Python that PSMC+ will work on? I'm not sure which version of python is installed when you run conda create`
+
 ```
 conda create --name PSMCplus
 conda install numpy numba pandas joblib scipy psutil matplotlib
@@ -13,9 +13,10 @@ conda activate PSMCplus
 ```
 
 To check whether the installation worked, you can run with some test data:<br>
-`python /home/<user>/PSMCplus/PSMCplus.py -in /home/<user>/PSMCplus/simulations/constpopsize.mhs -D 10 -b 100 -its 1 -o /tmp/deleteme`
+`python /home/<user>/PSMCplus/PSMCplus.py -in /home/<user>/PSMCplus/simulations/constpopsize.mhs -D 10 -its 1 -o testing`
+This should save an output file to `testingfinal_parameters.txt`, and print log information to stdout. 
 
-`Arun: does this create a /tmp/deleteme folder? or should the user make one?`
+If you are having problems, see the Troubleshooting section. 
 
 ## Quick start
 
@@ -28,8 +29,6 @@ PSMC+ takes multi-hetsep (mhs) files as introduced by Stephan Schiffels. To gene
 You can run PSMCplus with the following command line: 
 
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>`
-
-`Arun: are all these command line args required? If not, what's the minimal number that are required?`
 
 `D` is the number of discrete time interval windows, `b` is the genomic bin size, and `its` is the number of iterations (see the Advanced section for a more detailed explanation). `<infiles>` is a string (separated by a space if more than one) that points to the mhs files. The inferred parameters will be saved to `<outprefix>final_parameters.txt` and a log file will be saved to `<logfile>`. The output file contains `D` rows and 3 columns, which are left time boundary, the right time boundary, and the coalescence rate per discrete time window. To scale the times into generations, you must divide by `mu`. We get the effective population size by taking the inverse of the inverse coalescence rate and dividing this by `mu`. 
 
@@ -53,13 +52,26 @@ You can decode the HMM (that is, get the inferred coalescence times across the g
 
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infile> -D <D> -o <outprefix> -decode -decode_downsample <decode_downsize> | tee <logfile.txt>`
 
-The argument `-decode` tells PSMC+ to decode the HMM, as opposed to inferring the $N_e$ parameters. The decoding file is large - you can reduce disc space by saving the posterior probabilities only at every X base pairs with the `-decode_downsample` argument, where `X = b*decode_downsize` (`b` is the genomic binsize, see above or Advanced) `Arun: can you tell me how to get the output every 10KB? do I set it to -decode_downsample 10000?`. I recommend that when decoding you provide the command line with the inferred inverse coalescence rate parameters, as assuming an incorrect demography can induces bias (see Schweiger et al Sup Fig X `Arun: link to this figure. Is this the genome research paper?`). See `-lambda_A_fg` in the Advanced section for more information.  See the [Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for an example.
+The argument `-decode` tells PSMC+ to decode the HMM, as opposed to inferring the $N_e$ parameters. The decoding file is large - you can reduce disc space by saving the posterior probabilities only at every X base pairs with the `-decode_downsample` argument, where `X = b*decode_downsize` (`b` is the genomic binsize, see above or Advanced). For example, if `b=100` and you want to save every the posterior every 10kb, you should do `-decode_downsample 100` (as `b*decode_downsample = 100*100 = 10000`). I recommend that when decoding you provide the command line with the inferred inverse coalescence rate parameters, as assuming an incorrect demography can induces bias. See `-lambda_A_fg` in the Advanced section for more information.  See the [Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for an example.
 
-For the output file, the first row is the position, and the remaining rows are the probability of coalescing in each time window (which is set by the `-D` flag), with the first row being the most recent and the last row the most ancient. The time windows are in coalescent units (`Arun: 2N0? 4N0?`), and the boundaries are detailed in the comment at the top of the file. See the [Inference Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for parsing this file. 
+For the output file, the first row is the position, and the remaining rows are the probability of coalescing in each time window (which is set by the `-D` flag), with the first row being the most recent and the last row the most ancient. The time windows are in coalescent units (scale with `2*N_0*gen`), and the boundaries are detailed in the comment at the top of the file. See the [Inference Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for parsing this file. 
+
+Note that if you want *extremely* fast decoding of pairwise coalescence times, the current state of the art is Regev Schweiger's `gamma-smc` ([paper](https://genome.cshlp.org/content/33/7/1023/suppl/DC1) [code](https://github.com/regevs/gamma_smc)).
 
 # Advanced
 
 Here is a more in depth explanation of the hyperparameters for PSMC+. Quick preliminaries: PSMC+ works in coalescent units, so uses `theta` and `rho`. theta is the scaled mutation rate and is equal to `4*N*mu` where `mu` is the rate per generation per base; `rho` is the scaled recombination rate and is equal to `4*N*r` where `r` is the rate per generation per neighbouring base pairs. The inferred parameters are scaled to time in years by a user-provided mu and generation time, and to real units of `N` also by `mu`. 
+
+-D
+The number of discrete time intervals. 
+
+Default behaviour is to use `D=32`.
+
+-o
+The output prefix (if inferring $N_e$), or the output file (if decoding). 
+
+If you are inferring $N_e$, and you set `-o /home/<user>/PSMC+_inference/Ne_` then the file describing the inferred parameters will be saved to `/home/<user>/PSMC+_inference/Ne_final_parameters`. Default behaviour is to save to the current working directory. 
+If you are decoding and you set `-o /home/<user>/PSMC+_inference/TMRCA.txt.gz`, then the matrix of posterior distributions will be saved to `/home/<user>/PSMC+_inference/TMRCA.txt.gz`. You must give this argument if decoding. 
 
 -theta 
 The scaled mutation rate, `theta = 4*N*mu`. 
@@ -115,6 +127,11 @@ A comma separated list of floats that are taken are used as the starting guess f
 Default behaviour is to assume `lambda_A_fg` is 1 everywhere. 
 See the [Inference Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for more information on this, especially for the decoding. 
 
+-its
+Number of iterations of the EM algorithm. 
+
+Default behaviour is `its=20`.
+
 -thresh 
 Stop iterating the EM algorithm after the change in log-likelihood is less than thresh. 
 
@@ -148,3 +165,18 @@ You can visualise the desired demography and parameters from the simulation in t
 
 TODO elaborate. 
 PSMC+ enables a user to provided a map of varying mutation or recombination rates. These are bed files where the columns are chromosome, start, end, rate. Rate corresponds to the local mutation map. Note that recombination maps are not yet fully implemented. 
+
+## Troubleshooting
+
+We use PSMC+ with the following versions of each package: 
+```
+python 3.10.5
+numba 0.55.2
+joblib 1.1.0
+matplotlib 3.5.2
+pandas 1.4.3
+psutil 5.9.1
+scipy 1.8.1
+```
+If your installation attempt fails, please try with versions listed above. If you are still having problems, please submit a new issue.
+

@@ -153,11 +153,16 @@ else:
 # set output path
 if args.file_outpath is None:
     output_path = os.getcwd()
+    output_path += '/'
     print(f'\nSaving output to {output_path}',flush=True)
     try:
         os.mkdir(output_path)
     except:
-        print('\tDirectory already exists.',flush=True)
+        # print('\tDirectory already exists.',flush=True)
+        print('',end='')
+    if args.decode_flag==True:
+        print(f'ERROR: -o required for decoding. Aborting')
+        sys.exit()
 else:
     output_path = args.file_outpath
     print(f'\nSaving output to {output_path}',flush=True)
