@@ -13,7 +13,9 @@ conda activate PSMCplus
 ```
 
 To check whether the installation worked, you can run with some test data:<br>
+
 `python /home/<user>/PSMCplus/PSMCplus.py -in /home/<user>/PSMCplus/simulations/constpopsize.mhs -D 10 -its 1 -o testing`
+
 This should save an output file to `testingfinal_parameters.txt`, and print log information to stdout. 
 
 If you are having problems, see the Troubleshooting section. 
@@ -26,11 +28,11 @@ PSMC+ takes multi-hetsep (mhs) files as introduced by Stephan Schiffels. To gene
 
 ### Inference of population size history
 
-You can run PSMCplus with the following command line: 
+You can run PSMC+ with the following command line: 
 
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>`
 
-`D` is the number of discrete time interval windows, `b` is the genomic bin size, and `its` is the number of iterations (see the Advanced section for a more detailed explanation). `<infiles>` is a string (separated by a space if more than one) that points to the mhs files. The inferred parameters will be saved to `<outprefix>final_parameters.txt` and a log file will be saved to `<logfile>`. The output file contains `D` rows and 3 columns, which are left time boundary, the right time boundary, and the coalescence rate per discrete time window. To scale the times into generations, you must divide by `mu`. We get the effective population size by taking the inverse of the inverse coalescence rate and dividing this by `mu`. 
+`D` is the number of discrete time interval windows, `b` is the genomic bin size, and `its` is the number of iterations (see the Advanced section for a more detailed explanation). `<infiles>` is a string (separated by a space if more than one) that points to the mhs files. The inferred parameters will be saved to `<outprefix>final_parameters.txt` and a log file will be saved to `<logfile>`. The output file contains `D` rows and 3 columns, which are the left time boundary, the right time boundary, and the coalescence rate per discrete time window. To scale the times into generations, you must divide by `mu`. We get the effective population size by taking the inverse of the coalescence rate and dividing this by `mu`. 
 
 You can plot this in Python using the following code:
 ```
@@ -52,34 +54,34 @@ You can decode the HMM (that is, get the inferred coalescence times across the g
 
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infile> -D <D> -o <outprefix> -decode -decode_downsample <decode_downsize> | tee <logfile.txt>`
 
-The argument `-decode` tells PSMC+ to decode the HMM, as opposed to inferring the $N_e$ parameters. The decoding file is large - you can reduce disc space by saving the posterior probabilities only at every X base pairs with the `-decode_downsample` argument, where `X = b*decode_downsize` (`b` is the genomic binsize, see above or Advanced). For example, if `b=100` and you want to save every the posterior every 10kb, you should do `-decode_downsample 100` (as `b*decode_downsample = 100*100 = 10000`). I recommend that when decoding you provide the command line with the inferred inverse coalescence rate parameters, as assuming an incorrect demography can induces bias. See `-lambda_A_fg` in the Advanced section for more information.  See the [Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for an example.
+The argument `-decode` tells PSMC+ to decode the HMM, as opposed to inferring the $N_e$ parameters. The decoding file is large - you can reduce disc space by saving the posterior probabilities only at every X base pairs with the `-decode_downsample` argument, where `X = b*decode_downsize` (`b` is the genomic binsize, see above or Advanced). For example, if `b=100` and you want to save every the posterior every 10kb, you should do `-decode_downsample 100` (as `b*decode_downsample = 100*100 = 10000`). I recommend that when decoding you provide the command line with the inferred inverse coalescence rate parameters, as assuming an incorrect demography can induce bias. See `-lambda_A_fg` in the Advanced section for more information.  See the [Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for an example.
 
-For the output file, the first row is the position, and the remaining rows are the probability of coalescing in each time window (which is set by the `-D` flag), with the first row being the most recent and the last row the most ancient. The time windows are in coalescent units (scale with `2*N_0*gen`), and the boundaries are detailed in the comment at the top of the file. See the [Inference Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for parsing this file. 
+For the output file, the first row is the position, and the remaining rows are the probability of coalescing in each time window (of which there are `D`), with the first row being the most recent and the last row the most ancient. The time windows are in coalescent units (scale to years with `2*N_0*gen`), and the boundaries are detailed in the comment at the top of the file. See the [Inference Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for parsing this file. 
 
-Note that if you want *extremely* fast decoding of pairwise coalescence times, the current state of the art is Regev Schweiger's `gamma-smc` ([paper](https://genome.cshlp.org/content/33/7/1023/suppl/DC1) [code](https://github.com/regevs/gamma_smc)).
+Note that if you want *extremely* fast decoding of pairwise coalescence times, the current state of the art method is Regev Schweiger's `gamma-smc` ([paper](https://genome.cshlp.org/content/33/7/1023/suppl/DC1) [code](https://github.com/regevs/gamma_smc)).
 
 # Advanced
 
-Here is a more in depth explanation of the hyperparameters for PSMC+. Quick preliminaries: PSMC+ works in coalescent units, so uses `theta` and `rho`. theta is the scaled mutation rate and is equal to `4*N*mu` where `mu` is the rate per generation per base; `rho` is the scaled recombination rate and is equal to `4*N*r` where `r` is the rate per generation per neighbouring base pairs. The inferred parameters are scaled to time in years by a user-provided mu and generation time, and to real units of `N` also by `mu`. 
+Here is a more in depth explanation of the hyperparameters for PSMC+. Quick preliminaries: PSMC+ works in coalescent units, so uses `theta` and `rho`. `theta` is the scaled mutation rate and is equal to `4*N*mu` where `mu` is the rate per generation per base; `rho` is the scaled recombination rate and is equal to `4*N*r` where `r` is the rate per generation per neighbouring base pairs. In the previous sentence, `N` is the "long-term effective population size" and can be thought of as the mean of changes in population size over time. The inferred parameters are scaled to time in years by a user-provided mutation rate per base pair per generation (`mu`) and generation time (`gen`), and to real units of `N` also by `mu`. 
 
--D
+-D<br>
 The number of discrete time intervals. 
 
 Default behaviour is to use `D=32`.
 
--o
+-o<br>
 The output prefix (if inferring $N_e$), or the output file (if decoding). 
 
 If you are inferring $N_e$, and you set `-o /home/<user>/PSMC+_inference/Ne_` then the file describing the inferred parameters will be saved to `/home/<user>/PSMC+_inference/Ne_final_parameters`. Default behaviour is to save to the current working directory. 
 If you are decoding and you set `-o /home/<user>/PSMC+_inference/TMRCA.txt.gz`, then the matrix of posterior distributions will be saved to `/home/<user>/PSMC+_inference/TMRCA.txt.gz`. You must give this argument if decoding. 
 
--theta 
+-theta<br> 
 The scaled mutation rate, `theta = 4*N*mu`. 
 
 Default behaviour is to calculate this from the data with theta=number_hets/(sequence_length-number_masked_bases). It is not subsequently updated as part of the expectation-maximisation (EM) algorithm. Usage: if you instead want to give a particular value of theta, e.g. 0.001, you can do: 
 `python /home/<user>/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> -theta 0.001 | tee <logfile>`
 
--mu_over_rho_ratio 
+-mu_over_rho_ratio <br>
 The ratio of the mutation rate to the recombination rate (this parameter should really be called "theta_over_rho_ratio").
 
 If you know the ratio of the mutation to recombination rate, then the starting value of rho is `rho=theta/mu_over_rho_ratio`. 
