@@ -45,7 +45,18 @@ plt.xscale('log')
 plt.ylabel('$N_e(t)$')
 plt.xlabel('Years')
 ```   
-    
+
+You can plot this in R using the following code:
+```
+mu = 1.25e-8
+gen = 30
+inference<-read.table(final_parameters_file, header=FALSE)
+time = inference[,1]/mu*gen
+N = (1/inference[,3])/mu
+plot(time,N,log="x",type="n",xlab="Years",ylab="Time")
+lines(time, N, type="s", col="red")
+```
+
 See the [Inference Tutorial notebook](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for a specific example, and the Advanced section for a more detailed explanation of the hyperparameters. 
 
 ### Decoding 
