@@ -30,7 +30,7 @@ parser.add_argument('-D','--number_time_windows',help='The number of time window
 parser.add_argument('-spread_1','--D_spread_1',help='Parameter controlling the time interval boundaries',nargs='?',const=0.1,type=float,default=0.1)
 parser.add_argument('-spread_2','--D_spread_2',help='Parameter controlling the time interval boundaries',nargs='?',const=50,type=float,default=50)
 parser.add_argument('-b','--bin_size',help='Adjust recombination rate to bin this many bases together', nargs='?',const=100,type=int,default=100)
-parser.add_argument('-rho','--scaled_recombination_rate',help='The scaled recombination rate; if p is per gen per bp recombination rate, and 2N is the diploid effective size, rho =4Np',nargs='?',const=0.0004,type=float,default=0.0004)
+parser.add_argument('-rho','--scaled_recombination_rate',help='The scaled recombination rate; if p is per gen per bp recombination rate, and 2N is the diploid effective size, rho =4Np',nargs='?',type=float)
 parser.add_argument('-theta','--scaled_mutation_rate',help='The scaled mutation rate; if mu is per gen per bp mutation rate, and 2N is the diploid effective size, theta =4Nmu',required=False,type=str,default=None)
 parser.add_argument('-rho_fixed','--rho_fixed',help='Boolean for optimising rho as a parameter',default=False,action='store_true')
 parser.add_argument('-mu_over_rho_ratio','--mu_over_rho_ratio',help='Starting ratio between theta and rho',nargs='?',const=False,type=float,default=1.5)
@@ -282,7 +282,8 @@ else:
         print('\t\ttheta input not valid. Aborting',flush=True)
         sys.exit()
 
-if args.mu_over_rho_ratio==None:
+pdb.set_trace()
+if args.scaled_recombination_rate!=None:
     rho = args.scaled_recombination_rate
 else:
     rho = theta / args.mu_over_rho_ratio
