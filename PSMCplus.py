@@ -282,7 +282,6 @@ else:
         print('\t\ttheta input not valid. Aborting',flush=True)
         sys.exit()
 
-pdb.set_trace()
 if args.scaled_recombination_rate!=None:
     rho = args.scaled_recombination_rate
 else:
