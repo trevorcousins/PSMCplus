@@ -203,7 +203,7 @@ chr1    200 300 2e-08
 chr1    300 400 0.5e-08
 chr1    400 500 1e-08
 ```
-Then you should give PSMC+ the following (dividee the fourth column by its mean, adjusting for length of starts and stops):
+Then you should give PSMC+ the following (divide the fourth column by its mean, adjusting for length of starts and stops):
 ```
 chr1    0   100 1
 chr1    100 200 1
