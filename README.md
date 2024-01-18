@@ -195,7 +195,7 @@ You can visualise the desired demography and parameters from the simulation in t
 
 ### Local coalescence rate variation
 
-PSMC+ enables a user to provided a map of varying coalescence rates across the genome. The local coalescent rate may change either do to selection or mutation rate variation. The map that PSMC+ requires is bed file where the 1st column is chrom, 2nd column is start position, 3rd column is end position, 4th column is the rate between the start and end (2nd and 3rd column, respectively). The rate is given in units of the mean, e.g if your mutation rate looks like this:
+PSMC+ enables a user to provided a map of varying coalescence rates across the genome. The local coalescent rate may change either do to selection or mutation rate variation. The map that PSMC+ requires is bed file where the 1st column is chrom, 2nd column is start position, 3rd column is end position, 4th column is the rate between the start and end (2nd and 3rd column, respectively). The rate is given in units of the mean, e.g. if your mutation rate looks like this:
 ```
 chr1    0   100 1e-08
 chr1    100 200 1e-08
@@ -203,7 +203,7 @@ chr1    200 300 2e-08
 chr1    300 400 0.5e-08
 chr1    400 500 1e-08
 ```
-Then you should give PSMC+ the following (dive the fourth column by the mean, adjusting for length of starts and stops):
+Then you should give PSMC+ the following (dividee the fourth column by its mean, adjusting for length of starts and stops):
 ```
 chr1    0   100 1
 chr1    100 200 1
