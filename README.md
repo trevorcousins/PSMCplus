@@ -191,10 +191,40 @@ To simulate with a changing population size, you must give an argument `-lambda_
 You can visualise the desired demography and parameters from the simulation in the [Simulation Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Simulation_tutorial.ipynb).
 
 
-## Varying mutation (or recombination) rates
+## Varying rates across the genome
 
-TODO elaborate. 
-PSMC+ enables a user to provided a map of varying mutation or recombination rates. These are bed files where the columns are chromosome, start, end, rate. Rate corresponds to the local mutation map. Note that recombination maps are not yet fully implemented. 
+### Local coalescence rate variation
+
+PSMC+ enables a user to provided a map of varying coalescence rates across the genome. The local coalescent rate may change either do to selection or mutation rate variation. The map that PSMC+ requires is bed file where the 1st column is chrom, 2nd column is start position, 3rd column is end position, 4th column is the rate between the start and end (2nd and 3rd column, respectively). The rate is given in units of the mean, e.g if your mutation rate looks like this:
+```
+chr1    0   100 1e-08
+chr1    100 200 1e-08
+chr1    200 300 2e-08
+chr1    300 400 0.5e-08
+chr1    400 500 1e-08
+```
+Then you should give PSMC+ the following (dive the fourth column by the mean, adjusting for length of starts and stops):
+```
+chr1    0   100 1
+chr1    100 200 1
+chr1    200 300 2
+chr1    300 400 0.5
+chr1    400 500 1
+```
+
+You can feed this to PSMC+ with the `-in_M` argument:
+
+```python /path/to/installation/PSMCplus/PSMCplus.py -in <infiles> -in_M <rate_maps> -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>```
+
+where `<rate_maps>` is a string or list of strings that corresponds directly to the input mhs files in `<infiles>`. As a particular example if you have input files `/data/chr1.mhs /data/chr2.mhs /data/chr3.mhs` and rate files `/data/chr1_ratemap.bed /data/chr2_ratemap.bed /data/chr3_ratemap.bed` you would do:
+
+```python /path/to/installation/PSMCplus/PSMCplus.py -in /data/chr1.mhs /data/chr2.mhs /data/chr3.mhs -in_M /data/chr1_ratemap.bed /data/chr2_ratemap.bed /data/chr3_ratemap.bed -D <D> -b <b> -its <its> -o <outprefix> | tee <logfile>```
+
+If there is a large discrepancy between the mhs and corresponding rate file, you will get an error. The functionality is exactly the same for the decoding. See the [Tutorial](https://github.com/trevorcousins/PSMCplus/blob/master/tutorial/Inference_tutorial.ipynb) for more information and a particular example.
+
+## Varying recombination rates
+
+Incoming... 
 
 ## Troubleshooting
 
