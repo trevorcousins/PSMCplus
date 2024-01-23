@@ -8,8 +8,8 @@ PSMC+ is written in Python. You will need numpy, numba, pandas, joblib, scipy, p
 
 ```
 conda create --name PSMCplus
-conda install numpy numba pandas joblib scipy psutil matplotlib
 conda activate PSMCplus
+conda install numpy numba pandas joblib scipy psutil matplotlib
 git clone https://github.com/trevorcousins/PSMCplus.git
 ```
 
@@ -243,3 +243,8 @@ In the above commands you will of course need to change the `/path/to/installati
 
 If you are still having problems, please submit a new issue.
 
+## Citation
+
+If you use PSMC+, please cite the following [paper](https://www.biorxiv.org/content/10.1101/2024.01.18.576291v1): 
+
+* Cousins, T., Tabin, D., Patterson, N., Reich, D. and Durvasula, A., 2024. Accurate inference of population history in the presence of background selection. bioRxiv, pp.2024-01.
