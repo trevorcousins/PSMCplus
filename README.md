@@ -228,6 +228,7 @@ Incoming...
 
 ## Troubleshooting
 
+### Installation
 We use PSMC+ with the following versions of each package: 
 ```
 python 3.10.5
@@ -240,6 +241,10 @@ scipy 1.8.1
 ```
 If your installation attempt fails, please try with versions listed above.
 In the above commands you will of course need to change the `/path/to/installation/` path. For a particular example, if I am in my home directory (`/home/trevor`) and do `git clone https://github.com/trevorcousins/PSMCplus.git`, then the code is ready to run at `/home/trevor/PSMCplus/PSMCplus.py` . 
+
+
+### Division by Zero error
+If your heterozygosity is very high (e.g. `theta=0.05`), the default binsize of 100 will not be appropriate and you'll get an error. Try instead a binsize of 10 or 20 (add `-b 10` or `-b 20` to your command line). [See here](https://github.com/trevorcousins/PSMCplus/issues/2)
 
 If you are still having problems, please submit a new issue.
 
