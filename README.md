@@ -169,8 +169,8 @@ Default behaviour is to run for 30 iterations - if both `its` and `thresh` are g
 The spread of the discrete time window boundaries. 
 
 The time window boundaries are given by the following equation: <br>
-$\tau_i = spread_1 exp\left( \frac{i}{D}log\left(1+\frac{spread_2}{\omega}\right)-1\right)$<br>
-Where spread_1 controls the dispersion of intervals in recent time, and spread_2 controls the dispersion in ancient time. In humans, I recommend `spread_1=0.05` and `spread_2=50`. This may not be optimal in other species and it is probably a good idea to experiment with different combinations. 
+$\tau_i = $\omega exp\left( \frac{i}{D}log\left(1+\frac{\psi}{\omega}\right)-1\right)$<br>
+Where $\omega$ = spread_1 controls the dispersion of intervals in recent time, and $\psi$ = spread_2 controls the dispersion in ancient time. In humans, I recommend `spread_1=0.05` and `spread_2=50`, which spans ~10kya to ~5Mya. This may not be optimal in other species and it is probably a good idea to experiment with different combinations. 
 Default behaviour is to set `spread1=0.05` and `spread2=50`. Usage: if you want `spread_1=0.05` and `spread_2=50`
 
 ```python /path/to/installation/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> -spread_1 0.05 -spread_2 50 | tee <logfile>```
@@ -244,7 +244,7 @@ In the above commands you will of course need to change the `/path/to/installati
 
 
 ### Division by Zero error
-If your heterozygosity is very high (e.g. `theta=0.05`), the default binsize of 100 will not be appropriate and you'll get an error. Try instead a binsize of 10 or 20 (add `-b 10` or `-b 20` to your command line). [See here](https://github.com/trevorcousins/PSMCplus/issues/2)
+If your heterozygosity is very high (e.g. `theta>0.01`), the default binsize of 100 will not be appropriate and you'll get an error. Instead, reduce the binsize such that there being more than ~3 heterozygotes per bin is rare. E.g. if theta=0.05 then we expect a heterozygous position every 20 base pairs on average, so a suitable bin size is 5 or 10 (add `-b 10` or `-b 20` to your command line). [See here](https://github.com/trevorcousins/PSMCplus/issues/2)
 
 If you are still having problems, please submit a new issue.
 
