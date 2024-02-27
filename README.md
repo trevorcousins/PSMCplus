@@ -169,7 +169,7 @@ Default behaviour is to run for 30 iterations - if both `its` and `thresh` are g
 The spread of the discrete time window boundaries. 
 
 The time window boundaries are given by the following equation: <br>
-$\tau_i = $\omega exp\left( \frac{i}{D}log\left(1+\frac{\psi}{\omega}\right)-1\right)$<br>
+$\tau_i = \omega exp\left( \frac{i}{D}log\left(1+\frac{\psi}{\omega}\right)-1\right)$<br>
 Where $\omega$ = spread_1 controls the dispersion of intervals in recent time, and $\psi$ = spread_2 controls the dispersion in ancient time. In humans, I recommend `spread_1=0.05` and `spread_2=50`, which spans ~10kya to ~5Mya. This may not be optimal in other species and it is probably a good idea to experiment with different combinations. 
 Default behaviour is to set `spread1=0.05` and `spread2=50`. Usage: if you want `spread_1=0.05` and `spread_2=50`
 
