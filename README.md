@@ -244,7 +244,7 @@ In the above commands you will of course need to change the `/path/to/installati
 
 
 ### Division by Zero error
-If your heterozygosity is very high (e.g. `theta>0.01`), the default binsize of 100 will not be appropriate and you'll get an error. Instead, reduce the binsize such that there being more than ~3 heterozygotes per bin is rare. E.g. if theta=0.05 then we expect a heterozygous position every 20 base pairs on average, so a suitable bin size is 5 or 10 (add `-b 10` or `-b 20` to your command line). [See here](https://github.com/trevorcousins/PSMCplus/issues/2)
+If your heterozygosity is very high (e.g. `theta>0.01`), the default binsize of 100 will not be appropriate and you'll get an error. Instead, reduce the binsize such that there being more than ~3 heterozygotes per bin is rare. E.g. if theta=0.05 then we expect a heterozygous position every 20 base pairs on average, so a suitable bin size is 5 or 10 (add `-b 5` or `-b 10` to your command line). [See here](https://github.com/trevorcousins/PSMCplus/issues/2)
 
 If you are still having problems, please submit a new issue.
 
