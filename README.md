@@ -8,8 +8,8 @@ PSMC+ is written in Python. You will need numpy, numba, pandas, joblib, scipy, p
 
 ```
 conda create --name PSMCplus
-conda install numpy numba pandas joblib scipy psutil matplotlib
 conda activate PSMCplus
+conda install numpy numba pandas joblib scipy psutil matplotlib
 git clone https://github.com/trevorcousins/PSMCplus.git
 ```
 
@@ -169,8 +169,8 @@ Default behaviour is to run for 30 iterations - if both `its` and `thresh` are g
 The spread of the discrete time window boundaries. 
 
 The time window boundaries are given by the following equation: <br>
-$\tau_i = spread_1 exp\left( \frac{i}{D}log\left(1+\frac{spread_2}{\omega}\right)-1\right)$<br>
-Where spread_1 controls the dispersion of intervals in recent time, and spread_2 controls the dispersion in ancient time. In humans, I recommend `spread_1=0.05` and `spread_2=50`. This may not be optimal in other species and it is probably a good idea to experiment with different combinations. 
+$\tau_i = \omega exp\left( \frac{i}{D}log\left(1+\frac{\psi}{\omega}\right)-1\right)$<br>
+Where $\omega$ = spread_1 controls the dispersion of intervals in recent time, and $\psi$ = spread_2 controls the dispersion in ancient time. In humans, I recommend `spread_1=0.05` and `spread_2=50`, which spans ~10kya to ~5Mya. This may not be optimal in other species and it is probably a good idea to experiment with different combinations. 
 Default behaviour is to set `spread1=0.05` and `spread2=50`. Usage: if you want `spread_1=0.05` and `spread_2=50`
 
 ```python /path/to/installation/PSMCplus/PSMCplus.py -in <infiles> -D <D> -b <b> -its <its> -o <outprefix> -spread_1 0.05 -spread_2 50 | tee <logfile>```
@@ -228,6 +228,7 @@ Incoming...
 
 ## Troubleshooting
 
+### Installation
 We use PSMC+ with the following versions of each package: 
 ```
 python 3.10.5
@@ -241,5 +242,14 @@ scipy 1.8.1
 If your installation attempt fails, please try with versions listed above.
 In the above commands you will of course need to change the `/path/to/installation/` path. For a particular example, if I am in my home directory (`/home/trevor`) and do `git clone https://github.com/trevorcousins/PSMCplus.git`, then the code is ready to run at `/home/trevor/PSMCplus/PSMCplus.py` . 
 
+
+### Division by Zero error
+If your heterozygosity is very high (e.g. `theta>0.01`), the default binsize of 100 will not be appropriate and you'll get an error. Instead, reduce the binsize such that there being more than ~3 heterozygotes per bin is rare. E.g. if theta=0.05 then we expect a heterozygous position every 20 base pairs on average, so a suitable bin size is 5 or 10 (add `-b 5` or `-b 10` to your command line). [See here](https://github.com/trevorcousins/PSMCplus/issues/2)
+
 If you are still having problems, please submit a new issue.
 
+## Citation
+
+If you use PSMC+, please cite the following [paper](https://www.biorxiv.org/content/10.1101/2024.01.18.576291v1): 
+
+* Cousins, T., Tabin, D., Patterson, N., Reich, D. and Durvasula, A., 2024. Accurate inference of population history in the presence of background selection. bioRxiv, pp.2024-01.
